@@ -9,8 +9,8 @@ Military_Intelligence_Dashboard/
 ├── app.py                         # Main Streamlit dashboard entry point
 ├── train_attack_model.py          # Script to train the ML models
 ├── data/                          
-│   └── globalterrorism.csv        # Primary GTD dataset
-├── models/                        # Directory for trained ML models
+│   └── globalterrorism.csv        # Primary GTD dataset (Must be downloaded manually)
+├── models/                        # Directory for trained ML models (Generated locally)
 │   ├── attack_prediction_model.pkl
 │   ├── feature_encoders.pkl
 │   └── target_encoder.pkl
@@ -36,25 +36,34 @@ Military_Intelligence_Dashboard/
    ```bash
    pip install streamlit pandas plotly scikit-learn joblib
    ```
-3. **Data Requirements:**
-   Ensure the `data/globalterrorism.csv` file exists in the correct path relative to the project root.
+3. **Data Requirements (Important):**
+   Due to GitHub's file size limits, the `globalterrorism.csv` file (155+ MB) is **not** included in this repository. You must download the Global Terrorism Database dataset manually and place the extracted `globalterrorism.csv` file directly into the `data/` directory before proceeding.
 
 ## Model Training
 
-Before using the predictive features of the dashboard, you can retrain or generate the initial attack prediction model.
+Due to GitHub's file size limits, the pre-trained `attack_prediction_model.pkl` (1.14 GB) is **not** included in this repository. 
 
-To train the Random Forest model:
+Before using the predictive features of the dashboard, you **must** generate the initial attack prediction model locally. Once you have placed the dataset in the `data/` folder, run the following command:
+
 ```bash
 python train_attack_model.py
 ```
-This script will process the GTD dataset, train the model, and export the required `.pkl` files into the `models/` directory.
+This script will process the GTD dataset, train the Random Forest model, and export the required `.pkl` files into the `models/` directory.
 
 ## Running the Dashboard
 
-To launch the interactive dashboard locally:
+**Important:** Because the Global Terrorism Database is a large file, it exceeds Streamlit's default message size limit of 200 MB. To avoid a `MessageSizeError` crashing the app, you must increase the server's maximum message size.
+
+To launch the interactive dashboard locally, use the following command:
 
 ```bash
-streamlit run app.py
+streamlit run app.py --server.maxMessageSize 400
 ```
+
+> **Note:** Alternatively, you can permanently increase the limit for this project by creating a `.streamlit/config.toml` file in your root directory and adding the following lines:
+> ```toml
+> [server]
+> maxMessageSize = 400
+> ```
 
 This will open a local web server (typically at `http://localhost:8501`) where you can explore the various modules including the Global Threat Map, Attack Predictions, AI Intelligence reports, and Data Explorers.
